@@ -1,0 +1,35 @@
+{
+  "name": "toasted-potato",
+  "version": "1.0.0",
+  "description": "bananas",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/runner.js",
+    "test-watch": "node test/runner.js --watch"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/test/tests"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewRayCode/toasted-potato.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndrewRayCode/toasted-potato/issues"
+  },
+  "homepage": "https://github.com/AndrewRayCode/toasted-potato#readme",
+  "devDependencies": {
+    "colors": "^1.1.2",
+    "command-line-args": "^4.0.7",
+    "eslint": "^4.8.0",
+    "executable": "^4.1.0",
+    "jest": "^21.2.1",
+    "prettier": "1.7.4",
+    "prompt": "^1.0.0",
+    "three": "^0.87.1"
+  }
+}

@@ -1,0 +1,4 @@
+node_modules
+test/exports/
+.vscode
+**/__pycache__/**
