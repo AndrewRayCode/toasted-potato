@@ -30,9 +30,9 @@ install:
 
     # now create a symlink to the addon within blenders addons directory
     # this is important, because otherwhise blender would not be able to load the addon
-    - sudo ln -s ${PWD}/blender/io_three_test ${PWD}/blender_build/2.79/scripts/addons/io_three_test
+    - sudo ln -s ${PWD}/blender/io_three_development ${PWD}/blender_build/2.79/scripts/addons/io_three_development
 
-    - ls -al ${PWD}/blender_build/2.79/scripts/addons/io_three_test
+    - ls -al ${PWD}/blender_build/2.79/scripts/addons/io_three_development
 
 script:
     yarn test -- --blender-path=./blender_build/blender --addons-path='./blender_build/2.79/scripts/addons'

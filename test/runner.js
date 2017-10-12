@@ -10,6 +10,7 @@ setup((args, outputPath, blenderPath) => {
 
     const cliOptions = {
         watch: args.watch,
+        runInBand: args.runInBand,
     };
     jest.runCLI(cliOptions, [path.resolve(__dirname, '..')], function() {});
 });

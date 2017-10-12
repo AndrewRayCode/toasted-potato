@@ -11,7 +11,7 @@ def _error_handler(func):
         level = options.get(constants.LOGGING, constants.DISABLED)
         version = options.get('addon_version')
         if level != constants.DISABLED:
-            logger.init('io_three.export.log', level=level)
+            logger.init('io_three_development.export.log', level=level)
         if version is not None:
             logger.debug("Addon Version %s", version)
         api.init()
