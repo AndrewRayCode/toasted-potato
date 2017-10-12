@@ -17,23 +17,27 @@ async function exportFromBlender(blenderFilePath, exporterOptions) {
     const fullBlenderFilePath = path.resolve(
         __dirname,
         '..',
+        'blender-files',
         blenderFilePath,
     );
-    exportFilePath = `${process.outputPath}/${md5(
-        fullBlenderFilePath,
-    )}.json`;
+    exportFilePath = `${process.outputPath}/${md5(fullBlenderFilePath)}.json`;
     const threeOptions = JSON.stringify(exporterOptions);
     // Disable caching for now, since it will cache files even if python source
     // code changes. could revisit as some hash of python code?
     // if (fs.existsSync(exportFilePath)) {
     //     return callback(exportFilePath);
     // }
-    await executeBlender(process.blenderPath, fullBlenderFilePath, exportFilePath, threeOptions);
+    await executeBlender(
+        process.blenderPath,
+        fullBlenderFilePath,
+        exportFilePath,
+        threeOptions,
+    );
     return exportFilePath;
 }
 
 function executeBlender(blenderPath, filePath, exportFile, options) {
-    return new Promise( ( resolve, reject ) => {
+    return new Promise((resolve, reject) => {
         exec(
             `${blenderPath} ${filePath} --background --python test/scripts/export-from-blender.py -- ${exportFile} '${options}'`,
             (err, stdout, stderr) => {

@@ -1,4 +1,4 @@
-const setup = require('./config/setup.js');
+const setup = require('../config/setup.js');
 const jest = require('jest');
 const path = require('path');
 
