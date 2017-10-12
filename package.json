@@ -9,7 +9,7 @@
   },
   "jest": {
     "roots": [
-      "<rootDir>/test/tests"
+      "<rootDir>/test/specs"
     ]
   },
   "repository": {
