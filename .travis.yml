@@ -25,7 +25,7 @@ install:
     - tar jxf blender-2.79-linux-glibc219-x86_64.tar.bz2
 
     # rename the extracted folder to "blender" for easier reference
-    - mv blender-2.79-a950af8e24d-linux-glibc219-x86_64 blender_build
+    - mv blender-2.79-linux-glibc219-x86_64 blender_build
 
     # remove the archive, we do not need it anymore
     - rm blender-2.79-linux-glibc219-x86_64.tar.bz2
