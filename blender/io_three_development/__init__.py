@@ -37,7 +37,7 @@ logging.basicConfig(
     level=logging.DEBUG)
 
 bl_info = {
-    'name': "Three.js Format (Test Script)",
+    'name': "Three.js Format (Development Version)",
     'author': "repsac, mrdoob, yomotsu, mpk, jpweeks, rkusa, tschw, jackcaron, bhouston",
     'version': (1, 5, 0),
     'blender': (2, 74, 0),
@@ -538,7 +538,7 @@ def resolve_conflicts(self, context):
 class ExportThree(bpy.types.Operator, ExportHelper):
     """Class that handles the export properties"""
 
-    bl_idname = 'export.three_test'
+    bl_idname = 'export.io_three_development'
     bl_label = 'Export THREE'
     bl_options = {'PRESET'}
 
@@ -809,7 +809,7 @@ class ExportThree(bpy.types.Operator, ExportHelper):
         if settings[constants.COMPRESSION] == constants.MSGPACK:
             filepath = "%s%s" % (filepath[:-4], constants.PACK)
 
-        from io_three_test import exporter
+        from io_three_development import exporter
         if settings[constants.SCENE]:
             exporter.export_scene(filepath, settings)
         else:

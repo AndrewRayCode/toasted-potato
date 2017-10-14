@@ -20,6 +20,7 @@ const commandArgs = commandLineArgs([
     { name: 'blender-path', type: String },
     { name: 'addons-path', type: String },
     { name: 'watch', type: Boolean },
+    { name: 'runInBand', type: Boolean },
 ]);
 
 function error(msg) {
@@ -43,7 +44,7 @@ function validateAndSetUpAddons(addonsPath, callback) {
         yarn test -- --addons-path='/path/to/blender/addons/'`),
         );
     }
-    const testDirName = 'io_three_test';
+    const testDirName = 'io_three_development';
     const installTestDir = path.resolve(addonsPath, testDirName);
     if (fs.existsSync(installTestDir)) {
         callback();
@@ -53,12 +54,14 @@ function validateAndSetUpAddons(addonsPath, callback) {
             '..',
             '..',
             'blender',
-            'io_three_test',
+            'io_three_development',
         );
         const syminkCommand = `ln -s "${currentAddonPath}" "${installTestDir}"`;
         const description = colors.red
-            .bold(`\n❗ This will symlink the exporter in this directory to your Blender directory:
-${colors.cyan(installTestDir)}
+            .bold(`\n❗ This will link this Three.js exporter development version to your Blender directory:
+    ${colors.cyan(installTestDir)}
+The addon is only enabled during tests, and should not affect anything else in your Blender install.
+You can remove it at any time by removing the symlink path listed above.
 Is this OK? Y/n`);
         prompt.start();
         prompt.get(
@@ -70,7 +73,8 @@ Is this OK? Y/n`);
                 },
             },
             function(err, result) {
-                if (result.confirm === 'Y') {
+                const { confirm } = result;
+                if (['y', 'yes'].indexOf((confirm || '').toLowerCase()) > -1) {
                     console.log(
                         colors.green.bold(`\nExecuting:
     ${syminkCommand}`),

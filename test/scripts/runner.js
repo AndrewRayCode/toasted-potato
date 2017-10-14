@@ -1,4 +1,4 @@
-const setup = require('./config/setup.js');
+const setup = require('../config/setup.js');
 const jest = require('jest');
 const path = require('path');
 
@@ -10,6 +10,7 @@ setup((args, outputPath, blenderPath) => {
 
     const cliOptions = {
         watch: args.watch,
+        runInBand: args.runInBand,
     };
     jest.runCLI(cliOptions, [path.resolve(__dirname, '..')], function() {});
 });

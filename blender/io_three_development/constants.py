@@ -185,7 +185,7 @@ EXPORT_OPTIONS = {
 
 FORMAT_VERSION = 4.4
 VERSION = 'version'
-THREE = 'io_three_test'
+THREE = 'io_three_development'
 GENERATOR = 'generator'
 SOURCE_FILE = 'sourceFile'
 VALID_DATA_TYPES = (str, int, float, bool, list, tuple, dict)

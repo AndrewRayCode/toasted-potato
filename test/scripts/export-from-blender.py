@@ -8,16 +8,20 @@ args = argv[argv.index('--') + 1:]
 modelPath = args[0]
 exporter_options = json.loads(args[1])
 
-print('hello from python', args, exporter_options)
+print('hello from python', args, exporter_options, modelPath)
 
-addon_utils.enable('io_three_test')
+addon_utils.enable('io_three_development')
 
-bpy.ops.export.three_test(
+# This is a bug! The exporter doesn't do anything until you have an active
+# object. Here's a workaround for now.
+bpy.context.scene.objects.active = bpy.data.objects[0]
+
+bpy.ops.export.io_three_development(
     filepath=modelPath,
     **exporter_options
 )
 
-addon_utils.disable('io_three_test')
+addon_utils.disable('io_three_development')
 
 # filepath='',
 # check_existing=True,
