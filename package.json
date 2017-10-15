@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node test/scripts/runner.js",
-    "test-watch": "node test/scripts/runner.js --watch"
+    "test-watch": "node test/scripts/runner.js --watch",
+    "lint": "pep8 blender/"
   },
   "jest": {
     "roots": [

@@ -12,6 +12,7 @@ FORMAT_VERSION = 3
 
 class Geometry(base_classes.BaseNode):
     """Class that wraps a single mesh/geometry node."""
+
     def __init__(self, node, parent=None):
         logger.debug("Geometry().__init__(%s)", node)
 
@@ -45,7 +46,10 @@ class Geometry(base_classes.BaseNode):
             ext = constants.PACK
 
         key = ''
-        for key in (constants.MORPH_TARGETS, constants.ANIMATION, constants.CLIPS):
+        for key in (
+                constants.MORPH_TARGETS,
+                constants.ANIMATION,
+                constants.CLIPS):
             if key in self.keys():
                 break
         else:
@@ -148,7 +152,9 @@ class Geometry(base_classes.BaseNode):
     def copy_textures(self, texture_folder=''):
         """Copy the textures to the destination directory."""
         logger.debug("Geometry().copy_textures()")
-        if self.options.get(constants.EXPORT_TEXTURES) and not self.options.get(constants.EMBED_TEXTURES):
+        if self.options.get(
+                constants.EXPORT_TEXTURES) and not self.options.get(
+                constants.EMBED_TEXTURES):
             texture_registration = self.register_textures()
             if texture_registration:
                 logger.info("%s has registered textures", self.node)
@@ -206,7 +212,10 @@ class Geometry(base_classes.BaseNode):
         """
         logger.debug("Geometry().write_animation(%s)", filepath)
 
-        for key in (constants.MORPH_TARGETS, constants.ANIMATION, constants.CLIPS):
+        for key in (
+                constants.MORPH_TARGETS,
+                constants.ANIMATION,
+                constants.CLIPS):
             try:
                 data = self[key]
                 break
@@ -238,7 +247,7 @@ class Geometry(base_classes.BaseNode):
             index = self.get(constants.INDEX)
             if index is not None:
                 data[constants.INDEX] = index
-            data[constants.ATTRIBUTES] = self.get(constants.ATTRIBUTES)           
+            data[constants.ATTRIBUTES] = self.get(constants.ATTRIBUTES)
             data[constants.GROUPS] = self.get(constants.GROUPS)
             return {constants.DATA: data}
 
@@ -251,7 +260,8 @@ class Geometry(base_classes.BaseNode):
                       constants.INDEX]
 
         data = {}
-        anim_components = [constants.MORPH_TARGETS, constants.ANIMATION, constants.MORPH_TARGETS_ANIM, constants.CLIPS]
+        anim_components = [constants.MORPH_TARGETS, constants.ANIMATION,
+                           constants.MORPH_TARGETS_ANIM, constants.CLIPS]
         if self.options.get(constants.EMBED_ANIMATION):
             components.extend(anim_components)
         else:
@@ -310,7 +320,7 @@ class Geometry(base_classes.BaseNode):
         for key, value in self[constants.ATTRIBUTES].items():
             size = value[constants.ITEM_SIZE]
             array = value[constants.ARRAY]
-            metadata[key] = len(array)/size
+            metadata[key] = len(array) / size
 
     def _geometry_metadata(self, metadata):
         """Three.Geometry metadata
@@ -327,7 +337,7 @@ class Geometry(base_classes.BaseNode):
         for key in self.keys():
             if key in vectors:
                 try:
-                    metadata[key] = int(len(self[key])/3)
+                    metadata[key] = int(len(self[key]) / 3)
                 except KeyError:
                     pass
                 continue
@@ -379,12 +389,13 @@ class Geometry(base_classes.BaseNode):
         uvs_tuple = (constants.UV, option_uvs,
                      api.mesh.buffer_uv, 2)
         uvs2_tuple = (constants.UV2, option_uvs,
-                     lambda m: api.mesh.buffer_uv(m, layer=1), 2)
+                      lambda m: api.mesh.buffer_uv(m, layer=1), 2)
         normals_tuple = (constants.NORMAL, option_normals,
                          lambda m: api.mesh.buffer_normal(m, self.options), 3)
         colors_tuple = (constants.COLOR, option_colors,
                         lambda m: api.mesh.buffer_color(m, self.options), 3)
-        dispatch = (pos_tuple, uvs_tuple, uvs2_tuple, normals_tuple, colors_tuple)
+        dispatch = (pos_tuple, uvs_tuple, uvs2_tuple,
+                    normals_tuple, colors_tuple)
 
         for key, option, func, size in dispatch:
 
@@ -447,13 +458,12 @@ class Geometry(base_classes.BaseNode):
             array, item_size = attrib_data_in[0]
             i, n = 0, len(array) / item_size
 
-
             while i < n:
 
                 vertex_data = ()
                 for array, item_size in attrib_data_in:
                     vertex_data += tuple(
-                            array[i * item_size:(i + 1) * item_size])
+                        array[i * item_size:(i + 1) * item_size])
 
                 vertex_index = indexed.get(vertex_data)
 
@@ -489,59 +499,52 @@ class Geometry(base_classes.BaseNode):
                     indexed.clear()
                     flush_req = False
 
-
-            #manthrax: Adding group support for multiple materials
-            #index_threshold = indices_per_face*100
-            face_materials = api.mesh.buffer_face_material(self.node,self.options)
-            logger.info("Face material list length:%d",len(face_materials))
-            logger.info("Drawcall parameters count:%s item_size=%s",n,item_size)
-            assert((len(face_materials)*3)==n)
-            #Re-index the index buffer by material
+            face_materials = api.mesh.buffer_face_material(
+                self.node, self.options)
+            logger.info("Face material list length:%d", len(face_materials))
+            logger.info(
+                "Drawcall parameters count:%s item_size=%s", n, item_size)
+            assert((len(face_materials) * 3) == n)
+            # Re-index the index buffer by material
             used_material_indexes = {}
-            #Get lists of faces indices per material
+            # Get lists of faces indices per material
             for idx, mat_index in enumerate(face_materials):
                 if used_material_indexes.get(mat_index) is None:
                     used_material_indexes[mat_index] = [idx]
                 else:
                     used_material_indexes[mat_index].append(idx)
 
-            logger.info("# Faces by material:%s",str(used_material_indexes))
+            logger.info("# Faces by material:%s", str(used_material_indexes))
 
-            #manthrax: build new index list from lists of faces by material, and build the draw groups at the same time...
+            # build new index list from lists of faces by material,
+            # and build the draw groups at the same time...
             groups = []
             new_index = []
-            print("Mat index:",str(used_material_indexes))
+            print("Mat index:", str(used_material_indexes))
 
             for mat_index in used_material_indexes:
-                face_array=used_material_indexes[mat_index]
-                print("Mat index:",str(mat_index),str(face_array))
+                face_array = used_material_indexes[mat_index]
+                print("Mat index:", str(mat_index), str(face_array))
 
-                print( dir(self.node) )
+                print(dir(self.node))
 
                 group = {
                     'start': len(new_index),
-                    'count': len(face_array)*3,
+                    'count': len(face_array) * 3,
                     'materialIndex': mat_index
                 }
                 groups.append(group)
 
-                for fi in range(len(face_array)):
-                    prim_index = face_array[fi]
+                for face_array_index in range(len(face_array)):
+                    prim_index = face_array[face_array_index]
                     prim_index = prim_index * 3
-                    new_index.extend([index_data[prim_index],index_data[prim_index+1],index_data[prim_index+2]])
+                    new_index.extend([index_data[prim_index],
+                                      index_data[prim_index + 1],
+                                      index_data[prim_index + 2]])
 
             if len(groups) > 0:
                 index_data = new_index
-                self[constants.GROUPS]=groups
-            #else:
-            #    self[constants.GROUPS]=[{
-            #    'start':0,
-            #    'count':n,
-            #   'materialIndex':0
-            #}]
-            #manthrax: End group support
-
-
+                self[constants.GROUPS] = groups
 
             for i, key in enumerate(attrib_keys):
                 array = attrib_data_out[i][0]
@@ -560,11 +563,13 @@ class Geometry(base_classes.BaseNode):
         """Parse the geometry to Three.Geometry specs"""
         if self.options.get(constants.VERTICES):
             logger.info("Parsing %s", constants.VERTICES)
-            self[constants.VERTICES] = api.mesh.vertices(self.node, self.options) or []
+            self[constants.VERTICES] = api.mesh.vertices(
+                self.node, self.options) or []
 
         if self.options.get(constants.NORMALS):
             logger.info("Parsing %s", constants.NORMALS)
-            self[constants.NORMALS] = api.mesh.normals(self.node, self.options) or []
+            self[constants.NORMALS] = api.mesh.normals(
+                self.node, self.options) or []
 
         if self.options.get(constants.COLORS):
             logger.info("Parsing %s", constants.COLORS)
@@ -617,9 +622,14 @@ class Geometry(base_classes.BaseNode):
             logger.info("Parsing %s", constants.BLEND_SHAPES)
             mt = api.mesh.blend_shapes(self.node, self.options) or []
             self[constants.MORPH_TARGETS] = mt
-            if len(mt) > 0 and self._scene:  # there's blend shapes, let check for animation
-                tracks = api.mesh.animated_blend_shapes(self.node, self[constants.NAME], self.options) or []
-                merge = self._scene[constants.ANIMATION][0][constants.KEYFRAMES]
+            # there's blend shapes, let check for animation
+            if len(mt) > 0 and self._scene:
+                tracks = api.mesh.animated_blend_shapes(
+                    self.node, self[constants.NAME], self.options) or []
+                merge = (self._scene
+                         [constants.ANIMATION]
+                         [0]
+                         [constants.KEYFRAMES])
                 for track in tracks:
                     merge.append(track)
         elif self.options.get(constants.MORPH_TARGETS):

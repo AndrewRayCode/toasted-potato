@@ -69,7 +69,7 @@ class BaseClass(constants.BASE_DICT):
                 if isinstance(value, (str, list)):
                     new[key] = value[:]
                 elif isinstance(value, tuple):
-                    new[key] = value+tuple()
+                    new[key] = value + tuple()
                 elif isinstance(value, dict):
                     new[key] = {}
                     _dict_copy(value, new[key])
@@ -83,6 +83,7 @@ class BaseClass(constants.BASE_DICT):
 
 class BaseNode(BaseClass):
     """Base class for all nodes for the current platform."""
+
     def __init__(self, node, parent, type):
         BaseClass.__init__(self, parent=parent, type=type)
         self._node = node
@@ -133,6 +134,7 @@ class BaseNode(BaseClass):
 
 class BaseScene(BaseClass):
     """Base class that scenes inherit from."""
+
     def __init__(self, filepath, options):
         BaseClass.__init__(self, type=constants.SCENE)
 

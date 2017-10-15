@@ -8,21 +8,29 @@ class Image(base_classes.BaseNode):
     """Class the wraps an image node. This is the node that
     represent that actual file on disk.
     """
+
     def __init__(self, node, parent):
         logger.debug("Image().__init__(%s)", node)
         base_classes.BaseNode.__init__(self, node, parent, constants.IMAGE)
 
         if(self.scene.options.get(constants.EMBED_TEXTURES, False)):
-            texturefile = open(api.image.file_path(self.node),"rb")
-            extension = os.path.splitext(api.image.file_path(self.node))[1][1:].strip().lower()
-            if(extension == 'jpg') :
+            texturefile = open(api.image.file_path(self.node), "rb")
+            extension = (os.path.splitext(api.image.file_path(self.node))
+                         [1][1:].strip().lower())
+            if(extension == 'jpg'):
                 extension = 'jpeg'
-            self[constants.URL] = "data:image/" + extension + ";base64," + base64.b64encode(texturefile.read()).decode("utf-8")
-            texturefile.close();
+            base64_encoded = base64.b64encode(
+                texturefile.read()).decode("utf-8")
+            self[constants.URL] = ("data:image/" +
+                                   extension +
+                                   ";base64," +
+                                   base64_encoded)
+            texturefile.close()
         else:
-            texture_folder = self.scene.options.get(constants.TEXTURE_FOLDER, "")
-            self[constants.URL] = os.path.join(texture_folder, api.image.file_name(self.node))
-
+            texture_folder = self.scene.options.get(
+                constants.TEXTURE_FOLDER, "")
+            self[constants.URL] = os.path.join(
+                texture_folder, api.image.file_name(self.node))
 
     @property
     def destination(self):

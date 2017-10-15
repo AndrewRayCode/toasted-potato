@@ -14,12 +14,12 @@ BLENDING_TYPES = type('Blending', (), {
 })
 
 BLENDING_CONSTANTS = type('BlendingConstant', (), {
-    'NoBlending':0,
-    'NormalBlending':1,
-    'AdditiveBlending':2,
-    'SubtractiveBlending':3,
-    'MultiplyBlending':4,
-    'CustomBlending':5
+    'NoBlending': 0,
+    'NormalBlending': 1,
+    'AdditiveBlending': 2,
+    'SubtractiveBlending': 3,
+    'MultiplyBlending': 4,
+    'CustomBlending': 5
 })
 
 NEAREST_FILTERS = type('NearestFilters', (), {
@@ -91,7 +91,7 @@ MAPS = 'maps'
 FRAME_STEP = 'frameStep'
 FRAME_INDEX_AS_TIME = 'frameIndexAsTime'
 ANIMATION = 'animations'
-CLIPS="clips"
+CLIPS = "clips"
 KEYFRAMES = 'tracks'
 MORPH_TARGETS = 'morphTargets'
 MORPH_TARGETS_ANIM = 'morphTargetsAnimation'
@@ -311,7 +311,7 @@ BUMP_SCALE = 'bumpScale'
 NORMAL_MAP = 'normalMap'
 NORMAL_SCALE = 'normalScale'
 
-#@TODO ENV_MAP, REFLECTIVITY, REFRACTION_RATIO, COMBINE
+# @TODO ENV_MAP, REFLECTIVITY, REFRACTION_RATIO, COMBINE
 
 MAP_DIFFUSE = 'mapDiffuse'
 MAP_DIFFUSE_REPEAT = 'mapDiffuseRepeat'

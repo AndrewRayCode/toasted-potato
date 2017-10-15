@@ -93,8 +93,8 @@ def cast_shadow(obj):
         if obj.data.type in (SPOT, SUN):
             ret = obj.data.shadow_method != NO_SHADOW
         else:
-            logger.info('%s is a lamp but this lamp type does not '\
-                'have supported shadows in ThreeJS', obj.name)
+            logger.info('%s is a lamp but this lamp type does not '
+                        'have supported shadows in ThreeJS', obj.name)
             ret = None
         return ret
     elif obj.type == MESH:
@@ -130,10 +130,12 @@ def material(obj):
     logger.debug('object.material(%s)', obj)
 
     try:
-        matName = obj.material_slots[0].name # manthrax: Make this throw an error on an empty material array, resulting in non-material
+        # Throw an error on an empty material array, resulting in non-material
+        matName = obj.material_slots[0].name
         return [o.name for o in obj.material_slots]
     except IndexError:
         pass
+
 
 def extract_time(fcurves, start_index):
     time = []
@@ -141,41 +143,46 @@ def extract_time(fcurves, start_index):
         time.append(xx.co.x)
     return time
 
+
 def merge_sorted_lists(l1, l2):
-  sorted_list = []
-  l1 = l1[:]
-  l2 = l2[:]
-  while (l1 and l2):
-    h1 = l1[0]
-    h2 = l2[0]
-    if h1 == h2:
-      sorted_list.append(h1)
-      l1.pop(0)
-      l2.pop(0)
-    elif h1 < h2:
-      l1.pop(0)
-      sorted_list.append(h1)
-    else:
-      l2.pop(0)
-      sorted_list.append(h2)
-  # Add the remaining of the lists
-  sorted_list.extend(l1 if l1 else l2)
-  return sorted_list
+    sorted_list = []
+    l1 = l1[:]
+    l2 = l2[:]
+    while (l1 and l2):
+        h1 = l1[0]
+        h2 = l2[0]
+        if h1 == h2:
+            sorted_list.append(h1)
+            l1.pop(0)
+            l2.pop(0)
+        elif h1 < h2:
+            l1.pop(0)
+            sorted_list.append(h1)
+        else:
+            l2.pop(0)
+            sorted_list.append(h2)
+    # Add the remaining of the lists
+    sorted_list.extend(l1 if l1 else l2)
+    return sorted_list
+
 
 def appendVec3(track, time, vec3):
-    track.append({ "time": time, "value": [ vec3.x, vec3.y, vec3.z ] })
+    track.append({"time": time, "value": [vec3.x, vec3.y, vec3.z]})
+
 
 def appendQuat(track, time, quat):
-    track.append({ "time": time, "value": [ quat.x, quat.y, quat.z, quat.w ] })
+    track.append({"time": time, "value": [quat.x, quat.y, quat.z, quat.w]})
+
 
 # trackable transform fields ( <output field>, <nb fcurve> )
 TRACKABLE_FIELDS = {
-    "location": ( ".position", 3, "vector3" ),
-    "scale": ( ".scale", 3, "vector3" ),
-    "rotation_euler": ( ".rotation", 3, "vector3" ),
-    "rotation_quaternion": ( ".quaternion", 4, "quaternion" )
+    "location": (".position", 3, "vector3"),
+    "scale": (".scale", 3, "vector3"),
+    "rotation_euler": (".rotation", 3, "vector3"),
+    "rotation_quaternion": (".quaternion", 4, "quaternion")
 }
-EXPORTED_TRACKABLE_FIELDS = [ "location", "scale", "rotation_quaternion" ]
+EXPORTED_TRACKABLE_FIELDS = ["location", "scale", "rotation_quaternion"]
+
 
 @_object
 def animated_xform(obj, options):
@@ -200,7 +207,8 @@ def animated_xform(obj, options):
         field_info = TRACKABLE_FIELDS.get(fcurves[i].data_path)
         if field_info:
             newTimes = extract_time(fcurves, i)
-            times = merge_sorted_lists(times, newTimes) if times else newTimes  # merge list
+            times = merge_sorted_lists(
+                times, newTimes) if times else newTimes  # merge list
             i += field_info[1]
         else:
             i += 1
@@ -212,7 +220,7 @@ def animated_xform(obj, options):
         track = []
         track_loc.append(track)
         tracks.append({
-            constants.NAME: objName+field_info[0],
+            constants.NAME: objName + field_info[0],
             constants.TYPE: field_info[2],
             constants.KEYS: track
         })
@@ -223,26 +231,32 @@ def animated_xform(obj, options):
     track_loc = track_loc[0]
     use_inverted = options.get(constants.HIERARCHY, False) and obj.parent
 
-    if times == None:
-        logger.info("In animated xform: Unable to extract trackable fields from %s", objName)
+    if times is None:
+        logger.info(
+            "In animated xform: Unable to extract trackable fields from %s",
+            objName)
         return tracks
 
     # for each frame
     inverted_fallback = mathutils.Matrix() if use_inverted else None
-    convert_matrix = AXIS_CONVERSION    # matrix to convert the exported matrix
+    # matrix to convert the exported matrix
+    convert_matrix = AXIS_CONVERSION
     original_frame = context.scene.frame_current
     for time in times:
         context.scene.frame_set(time, 0.0)
-        if use_inverted:  # need to use the inverted, parent matrix might have chance
-            convert_matrix = obj.parent.matrix_world.inverted(inverted_fallback)
+        # need to use the inverted, parent matrix might have chance
+        if use_inverted:
+            convert_matrix = obj.parent.matrix_world.inverted(
+                inverted_fallback)
         wm = convert_matrix * obj.matrix_world
         appendVec3(track_loc, time, wm.to_translation())
-        appendVec3(track_sca, time, wm.to_scale()      )
-        appendQuat(track_qua, time, wm.to_quaternion() )
+        appendVec3(track_sca, time, wm.to_scale())
+        appendQuat(track_qua, time, wm.to_quaternion())
     context.scene.frame_set(original_frame, 0.0)  # restore to original frame
 
     # TODO: remove duplicated key frames
     return tracks
+
 
 @_object
 def custom_properties(obj):
@@ -252,10 +266,14 @@ def custom_properties(obj):
 
     """
     logger.debug('object.custom_properties(%s)', obj)
-    # Grab any properties except those marked private (by underscore
-    # prefix) or those with types that would be rejected by the JSON
-    # serializer object model.
-    return {K: obj[K] for K in obj.keys() if K[:1] != '_' and isinstance(obj[K], constants.VALID_DATA_TYPES)}  # 'Empty' Blender objects do not use obj.data.items() for custom properties, using obj.keys()
+    # Grab any properties except those marked private (by underscore prefix) or
+    # those with types that would be rejected by the JSON serializer object
+    # model. 'Empty' Blender objects do not use obj.data.items() for custom
+    # properties, using obj.keys()
+    return {K: obj[K] for K
+            in obj.keys()
+            if K[:1] != '_' and isinstance(obj[K], constants.VALID_DATA_TYPES)}
+
 
 @_object
 def mesh(obj, options):
@@ -343,6 +361,7 @@ def nodes(valid_types, options):
         if _valid_node(obj, valid_types, options):
             yield obj.name
 
+
 @_object
 def position(obj, options):
     """
@@ -371,7 +390,9 @@ def receive_shadow(obj):
                     return True
         return False
 
-AXIS_CONVERSION = axis_conversion(to_forward='Z', to_up='Y').to_4x4() 
+
+AXIS_CONVERSION = axis_conversion(to_forward='Z', to_up='Y').to_4x4()
+
 
 @_object
 def matrix(obj, options):
@@ -524,11 +545,12 @@ def extract_mesh(obj, options, recalculate=False):
         obj.data = original_mesh
 
     if not options.get(constants.SCENE):
-        xrot = mathutils.Matrix.Rotation(-math.pi/2, 4, 'X')
+        xrot = mathutils.Matrix.Rotation(-math.pi / 2, 4, 'X')
         mesh_node.transform(xrot * obj.matrix_world)
 
     # blend shapes
-    if options.get(constants.BLEND_SHAPES) and not options.get(constants.MORPH_TARGETS):
+    if (options.get(constants.BLEND_SHAPES) and not
+            options.get(constants.MORPH_TARGETS)):
         original_mesh = obj.data
         if original_mesh.shape_keys:
             logger.info('Using blend shapes')
@@ -552,13 +574,13 @@ def extract_mesh(obj, options, recalculate=False):
                     dst_kb[idx].co = src_kb[idx].co
 
                 if animCurves:
-                    data_path = 'key_blocks["'+key+'"].value'
+                    data_path = 'key_blocks["' + key + '"].value'
                     for fcurve in animCurves:
                         if fcurve.data_path == data_path:
                             dst_kb = mesh_node.shape_keys.key_blocks[key]
                             for xx in fcurve.keyframe_points:
                                 dst_kb.value = xx.co.y
-                                dst_kb.keyframe_insert("value",frame=xx.co.x)
+                                dst_kb.keyframe_insert("value", frame=xx.co.x)
                             pass
                             break  # no need to continue to loop
                     pass
@@ -594,8 +616,6 @@ def objects_using_mesh(mesh_node):
     :return: list of object names
 
     """
-    #manthrax: remove spam
-    #logger.debug('object.objects_using_mesh(%s)', mesh_node)
     for mesh_name, objects in _MESH_MAP.items():
         if mesh_name == mesh_node.name:
             return objects
@@ -736,6 +756,3 @@ def _valid_node(obj, valid_types, options):
 
     # if we get this far assume that the mesh is valid
     return True
-
-
-

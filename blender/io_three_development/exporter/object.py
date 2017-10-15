@@ -4,6 +4,7 @@ from . import base_classes, api
 
 class Object(base_classes.BaseNode):
     """Class that wraps an object node"""
+
     def __init__(self, node, parent=None, type=None):
         logger.debug("Object().__init__(%s)", node)
         base_classes.BaseNode.__init__(self, node, parent=parent, type=type)
@@ -22,7 +23,6 @@ class Object(base_classes.BaseNode):
         """
         return api.data(self.node)
 
-
     def _init_camera(self):
         """Initialize camera attributes"""
         logger.debug("Object()._init_camera()")
@@ -38,8 +38,8 @@ class Object(base_classes.BaseNode):
             self[constants.TOP] = api.camera.top(self.data)
             self[constants.BOTTOM] = api.camera.bottom(self.data)
 
-    #@TODO: need more light attributes. Some may have to come from
-    #       custom blender attributes.
+    # TODO: need more light attributes. Some may have to come from
+    # custom blender attributes.
     def _init_light(self):
         """Initialize light attributes"""
         logger.debug("Object()._init_light()")
@@ -47,17 +47,17 @@ class Object(base_classes.BaseNode):
         self[constants.INTENSITY] = api.light.intensity(self.data)
 
         # Commented out because Blender's distance is not a cutoff value.
-        #if self[constants.TYPE] != constants.DIRECTIONAL_LIGHT:
+        # if self[constants.TYPE] != constants.DIRECTIONAL_LIGHT:
         #    self[constants.DISTANCE] = api.light.distance(self.data)
-        self[constants.DISTANCE] = 0;
+        self[constants.DISTANCE] = 0
 
-        lightType = self[constants.TYPE]
+        light_type = self[constants.TYPE]
 
         # TODO (abelnation): handle Area lights
-        if lightType == constants.SPOT_LIGHT:
+        if light_type == constants.SPOT_LIGHT:
             self[constants.ANGLE] = api.light.angle(self.data)
             self[constants.DECAY] = api.light.falloff(self.data)
-        elif lightType == constants.POINT_LIGHT:
+        elif light_type == constants.POINT_LIGHT:
             self[constants.DECAY] = api.light.falloff(self.data)
 
     def _init_mesh(self):
@@ -91,23 +91,26 @@ class Object(base_classes.BaseNode):
         if self.options.get(constants.MATERIALS):
             logger.info("Parsing materials for %s", self.node)
 
-
-            material_names = api.object.material(self.node) #manthrax: changes for multimaterial start here
+            # Multimaterial
+            material_names = api.object.material(self.node)
             if material_names:
 
-                logger.info("Got material names for this object:%s",str(material_names));
+                logger.info("Got material names for this object:%s", str(material_names))
 
-                materialArray = [self.scene.material(objname)[constants.UUID] for objname in material_names]
-                if len(materialArray) == 0:  # If no materials.. dont export a material entry
-                    materialArray = None
-                elif len(materialArray) == 1: # If only one material, export material UUID singly, not as array
-                    materialArray = materialArray[0]
+                material_array = [self.scene.material(objname)[constants.UUID]
+                                  for objname in material_names]
+                # If no materials.. dont export a material entry
+                if not material_array == 0:
+                    material_array = None
+                # If only one material, export material UUIDg1, not as array
+                elif len(material_array) == 1:
+                    material_array = material_array[0]
                 # else export array of material uuids
-                self[constants.MATERIAL] = materialArray
+                self[constants.MATERIAL] = material_array
 
-                logger.info("Materials:%s",str(self[constants.MATERIAL]));
+                logger.info("Materials:%s", str(self[constants.MATERIAL]))
             else:
-                logger.info("%s has no materials", self.node) #manthrax: end multimaterial
+                logger.info("%s has no materials", self.node)
 
         # TODO (abelnation): handle Area lights
         casts_shadow = (constants.MESH,
@@ -146,12 +149,17 @@ class Object(base_classes.BaseNode):
             if self._scene:
                 # only when exporting scene
                 tracks = api.object.animated_xform(self.node, self.options)
-                merge = self._scene[constants.ANIMATION][0][constants.KEYFRAMES]
+                merge = (self._scene
+                         [constants.ANIMATION]
+                         [0]
+                         [constants.KEYFRAMES])
                 for track in tracks:
                     merge.append(track)
 
         if self.options.get(constants.HIERARCHY, False):
-            for child in api.object.children(self.node, self.scene.valid_types):
+            for child in api.object.children(
+                                             self.node,
+                                             self.scene.valid_types):
                 if not self.get(constants.CHILDREN):
                     self[constants.CHILDREN] = [Object(child, parent=self)]
                 else:

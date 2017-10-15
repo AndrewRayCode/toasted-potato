@@ -37,4 +37,5 @@ install:
     - ls -al ${PWD}/blender_build/2.79/scripts/addons/io_three_development
 
 script:
+    yarn lint && echo "✅ Code linted!"
     yarn test -- --blender-path=./blender_build/blender --addons-path='./blender_build/2.79/scripts/addons'

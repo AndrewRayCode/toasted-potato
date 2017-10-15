@@ -7,7 +7,7 @@ CONTEXT = {
     },
     1: {
         'title': "Warning Message",
-        'icon': 'ERROR' # I prefer this icon for warnings
+        'icon': 'ERROR'  # I prefer this icon for warnings
     },
     2: {
         'title': "Message",
@@ -44,7 +44,6 @@ def warning(message, title="", wrap=40):
     _draw(message, title, wrap, 1)
 
 
-
 def info(message, title="", wrap=40):
     """Creates an error dialog.
 
@@ -57,7 +56,6 @@ def info(message, title="", wrap=40):
     _draw(message, title, wrap, 2)
 
 
-
 def question(message, title="", wrap=40):
     """Creates an error dialog.
 
@@ -68,7 +66,6 @@ def question(message, title="", wrap=40):
 
     """
     _draw(message, title, wrap, 3)
-
 
 
 # Great idea borrowed from
@@ -91,7 +88,7 @@ def _draw(message, title, wrap, key):
                 message = message[wrap:]
             else:
                 lines += [message[:i]]
-                message = message[i+1:]
+                message = message[i + 1:]
     if message:
         lines += [message]
 

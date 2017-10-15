@@ -168,7 +168,7 @@ def wrap(texture):
     # other possible values: "CLIP", "EXTEND", "CLIP_CUBE", "CHECKER",
     # best match CLAMP behavior
     else:
-        return (constants.WRAPPING.CLAMP, constants.WRAPPING.CLAMP);
+        return (constants.WRAPPING.CLAMP, constants.WRAPPING.CLAMP)
 
 
 def textures():
