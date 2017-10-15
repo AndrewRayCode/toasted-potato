@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node test/scripts/runner.js",
     "test-watch": "node test/scripts/runner.js --watch",
-    "lint": "pep8 blender/"
+    "pep8": "pep8 blender/",
+    "lint": "eslint test/"
   },
   "jest": {
     "roots": [
@@ -34,6 +35,7 @@
     "jest": "^21.2.1",
     "md5": "^2.2.1",
     "prettier": "1.7.4",
+    "prettier-eslint": "^8.2.1",
     "prompt": "^1.0.0",
     "three": "^0.87.1"
   }

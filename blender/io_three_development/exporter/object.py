@@ -95,7 +95,8 @@ class Object(base_classes.BaseNode):
             material_names = api.object.material(self.node)
             if material_names:
 
-                logger.info("Got material names for this object:%s", str(material_names))
+                logger.info("Got material names for this object:%s",
+                            str(material_names))
 
                 material_array = [self.scene.material(objname)[constants.UUID]
                                   for objname in material_names]
