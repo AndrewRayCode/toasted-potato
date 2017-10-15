@@ -12,6 +12,7 @@ from . import (
 )
 from bpy import context
 
+
 class Scene(base_classes.BaseScene):
     """Class that handles the contruction of a Three scene"""
 
@@ -35,9 +36,9 @@ class Scene(base_classes.BaseScene):
     def __init_animation(self):
         self[constants.ANIMATION].append({
             constants.NAME: "default",
-            constants.FPS : context.scene.render.fps,
+            constants.FPS: context.scene.render.fps,
             constants.KEYFRAMES: []
-        });
+        })
         pass
 
     @property
@@ -163,7 +164,8 @@ class Scene(base_classes.BaseScene):
 
         io.dump(self.filepath, data, options=self.options)
 
-        if self.options.get(constants.EXPORT_TEXTURES) and not self.options.get(constants.EMBED_TEXTURES):
+        if (self.options.get(constants.EXPORT_TEXTURES) and not
+                self.options.get(constants.EMBED_TEXTURES)):
             texture_folder = self.options.get(constants.TEXTURE_FOLDER)
             for geo in self[constants.GEOMETRIES]:
                 logger.info("Copying textures from %s", geo.node)
@@ -256,4 +258,3 @@ def _find_node(value, manifest):
             return index
     else:
         logger.debug("No matching node for %s", value)
-

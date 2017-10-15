@@ -76,6 +76,7 @@ def intensity(lamp):
     logger.debug("light.intensity(%s)", lamp)
     return round(lamp.energy, 2)
 
+
 # mapping enum values to decay exponent
 __FALLOFF_TO_EXP = {
     'CONSTANT': 0,
@@ -84,6 +85,7 @@ __FALLOFF_TO_EXP = {
     'CUSTOM_CURVE': 0,
     'LINEAR_QUADRATIC_WEIGHTED': 2
 }
+
 
 @_lamp
 def falloff(lamp):

@@ -2,6 +2,12 @@
 
 # Developing
 
+#### Python Setup
+
+The exporter itself is a Python Blender add-on. Install the Python dependencies:
+
+    pip install -r requirements.txt
+
 #### Node 8.6.0
 
 You need Node 8.6.0. [Install NVM](https://github.com/creationix/nvm), then in this repository, `nvm use`.

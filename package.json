@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "node test/scripts/runner.js",
-    "test-watch": "node test/scripts/runner.js --watch"
+    "test-watch": "node test/scripts/runner.js --watch",
+    "pep8": "pep8 blender/",
+    "lint": "eslint test/"
   },
   "jest": {
     "roots": [
@@ -25,11 +27,15 @@
   "devDependencies": {
     "colors": "^1.1.2",
     "command-line-args": "^4.0.7",
-    "eslint": "^4.8.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "executable": "^4.1.0",
     "jest": "^21.2.1",
     "md5": "^2.2.1",
     "prettier": "1.7.4",
+    "prettier-eslint": "^8.2.1",
     "prompt": "^1.0.0",
     "three": "^0.87.1"
   }

@@ -39,7 +39,7 @@ def aspect(camera):
     """
     logger.debug("camera.aspect(%s)", camera)
     render = context.scene.render
-    return render.resolution_x/render.resolution_y
+    return render.resolution_x / render.resolution_y
 
 
 @_camera
@@ -78,7 +78,8 @@ def fov(camera):
     fov_in_radians = camera.angle
     aspect_ratio = aspect(camera)
     if aspect_ratio > 1:
-        fov_in_radians = 2 * math.atan(math.tan(fov_in_radians / 2) / aspect_ratio)
+        fov_in_radians = 2 * \
+            math.atan(math.tan(fov_in_radians / 2) / aspect_ratio)
     return math.degrees(fov_in_radians)
 
 

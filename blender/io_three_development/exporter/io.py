@@ -56,7 +56,8 @@ def dump(filepath, data, options=None):
             raise
 
         logger.info("Dumping to msgpack")
-        func = lambda x, y: msgpack.dump(x, y)
+
+        def func(x, y): return msgpack.dump(x, y)
         mode = 'wb'
     else:
         round_off = options.get(constants.ENABLE_PRECISION)
@@ -69,7 +70,9 @@ def dump(filepath, data, options=None):
         indent = 4 if indent else None
         compact_separators = (',', ':')
         logger.info("Dumping to JSON")
-        func = lambda x, y: _json.json.dump(x, y, indent=indent, separators=compact_separators)
+
+        def func(x, y): return _json.json.dump(
+            x, y, indent=indent, separators=compact_separators)
         mode = 'w'
 
     logger.info("Writing to %s", filepath)

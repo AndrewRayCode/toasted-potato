@@ -3,34 +3,37 @@ from .. import constants
 
 ROUND = constants.DEFAULT_PRECISION
 
-## THREE override function
+# THREE override function
+
+
 def _json_floatstr(o):
     if ROUND is not None:
         o = round(o, ROUND)
-        
+
     return '%g' % o
 
 
 def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
-        _key_separator, _item_separator, _sort_keys, _skipkeys, _one_shot,
-        ## HACK: hand-optimized bytecode; turn globals into locals
-        ValueError=ValueError,
-        dict=dict,
-        float=float,
-        id=id,
-        int=int,
-        isinstance=isinstance,
-        list=list,
-        str=str,
-        tuple=tuple,
-    ):
+                     _key_separator, _item_separator, _sort_keys, _skipkeys,
+                     _one_shot,
+                     # HACK: hand-optimized bytecode; turn globals into locals
+                     ValueError=ValueError,
+                     dict=dict,
+                     float=float,
+                     id=id,
+                     int=int,
+                     isinstance=isinstance,
+                     list=list,
+                     str=str,
+                     tuple=tuple,
+                     ):
     '''
     Overwrite json.encoder for Python 2.7 and above to not
     assign each index of a list or tuple to its own row as
-    this is completely asinine behaviour 
+    this is completely asinine behaviour
     '''
 
-    ## @THREE
+    # @THREE
     # Override the function
     _floatstr = _json_floatstr
 
@@ -47,15 +50,15 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
                 raise ValueError("Circular reference detected")
             markers[markerid] = lst
         buf = '['
-        ## @THREEJS
+        # @THREEJS
         # -  block the moronic functionality that puts each
         #    index on its own line causing insane row counts
-        #if _indent is not None:
+        # if _indent is not None:
         #    _current_indent_level += 1
         #    newline_indent = '\n' + _indent * _current_indent_level
         #    separator = _item_separator + newline_indent
         #    buf += newline_indent
-        #else:
+        # else:
         newline_indent = None
         separator = _item_separator
         first = True
@@ -203,6 +206,4 @@ def _make_iterencode(markers, _default, _encoder, _indent, _floatstr,
 
 
 # override the encoder
-json.encoder._make_iterencode = _make_iterencode 
-
-
+json.encoder._make_iterencode = _make_iterencode

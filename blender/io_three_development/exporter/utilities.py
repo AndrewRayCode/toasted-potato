@@ -15,8 +15,12 @@ def bit_mask(flags):
 
     """
     bit = 0
-    true = lambda x, y: (x | (1 << y))
-    false = lambda x, y: (x & (~(1 << y)))
+
+    def true(x, y):
+        return (x | (1 << y))
+
+    def false(x, y):
+        return (x & (~(1 << y)))
 
     for mask, position in constants.MASK.items():
         func = true if flags.get(mask) else false
@@ -56,5 +60,6 @@ def rgb2int(rgb):
     is_tuple = isinstance(rgb, tuple)
     rgb = list(rgb) if is_tuple else rgb
 
-    colour = (int(rgb[0]*255) << 16) + (int(rgb[1]*255) << 8) + int(rgb[2]*255)
+    colour = (int(rgb[0] * 255) << 16) + \
+        (int(rgb[1] * 255) << 8) + int(rgb[2] * 255)
     return colour

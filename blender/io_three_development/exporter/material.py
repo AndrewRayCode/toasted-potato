@@ -4,6 +4,7 @@ from . import base_classes, utilities, api
 
 class Material(base_classes.BaseNode):
     """Class that wraps material nodes"""
+
     def __init__(self, node, parent):
         logger.debug("Material().__init__(%s)", node)
         base_classes.BaseNode.__init__(self, node, parent,
@@ -93,7 +94,7 @@ class Material(base_classes.BaseNode):
 
             for func, map_key, scale_key, scale_func in mapping:
                 map_node = func(self.node)
-                if not map_node: 
+                if not map_node:
                     continue
                 logger.info("Found map node %s for %s", map_node, map_key)
                 tex_inst = self.scene.texture(map_node.name)
