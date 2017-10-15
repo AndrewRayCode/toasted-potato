@@ -154,7 +154,7 @@ class Geometry(base_classes.BaseNode):
         logger.debug("Geometry().copy_textures()")
         if self.options.get(
                 constants.EXPORT_TEXTURES) and not self.options.get(
-                constants.EMBED_TEXTURES):
+                    constants.EMBED_TEXTURES):
             texture_registration = self.register_textures()
             if texture_registration:
                 logger.info("%s has registered textures", self.node)
@@ -520,13 +520,11 @@ class Geometry(base_classes.BaseNode):
             # and build the draw groups at the same time...
             groups = []
             new_index = []
-            print("Mat index:", str(used_material_indexes))
+            logger.info("Mat index:", str(used_material_indexes))
 
             for mat_index in used_material_indexes:
                 face_array = used_material_indexes[mat_index]
-                print("Mat index:", str(mat_index), str(face_array))
-
-                print(dir(self.node))
+                logger.info("Mat index:", str(mat_index), str(face_array))
 
                 group = {
                     'start': len(new_index),
@@ -542,7 +540,7 @@ class Geometry(base_classes.BaseNode):
                                       index_data[prim_index + 1],
                                       index_data[prim_index + 2]])
 
-            if len(groups) > 0:
+            if groups:
                 index_data = new_index
                 self[constants.GROUPS] = groups
 

@@ -531,8 +531,6 @@ def _scale(bone, frame, action, armature_matrix):
         for i in range(ngroups):
             if action.groups[i].name == bone.name:
 
-                print(action.groups[i].name)
-
                 index = i
 
         if index > -1:
